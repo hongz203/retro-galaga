@@ -798,15 +798,25 @@ class Enemy {
     shootLaser() {
         if (gameState !== 'PLAYING') return;
         audio.playEnemyLaser();
-        // Shoot towards the player
+        // Shoot towards the player but cap the diagonal angle for playability
         const dx = player ? (player.x - this.x) : 0;
         const dy = player ? (player.y - this.y) : 600;
         const dist = Math.hypot(dx, dy);
         
         // Normalize speed
         const speed = (difficulty === 'HARD') ? 6.0 : 4.5;
-        const lx = (dx / dist) * speed;
-        const ly = (dy / dist) * speed;
+        let lx = (dx / dist) * speed;
+        let ly = (dy / dist) * speed;
+        
+        // Cap horizontal velocity so bullets travel mostly downwards (making them dodgeable)
+        const maxHorizontalSpeed = 1.5;
+        if (lx > maxHorizontalSpeed) {
+            lx = maxHorizontalSpeed;
+            ly = Math.sqrt(speed * speed - lx * lx);
+        } else if (lx < -maxHorizontalSpeed) {
+            lx = -maxHorizontalSpeed;
+            ly = Math.sqrt(speed * speed - lx * lx);
+        }
         
         lasers.push(new Laser(this.x, this.y + 12, lx, ly, false));
     }

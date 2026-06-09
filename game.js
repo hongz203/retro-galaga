@@ -1,6 +1,33 @@
 // Retro Galaga Game Engine
 // Programmed using HTML5 Canvas & Web Audio API
 
+// Safe localStorage wrapper to prevent crashes in sandboxed/incognito web views
+const safeStorage = {
+    fallback: {},
+    getItem(key) {
+        try {
+            return window.localStorage.getItem(key);
+        } catch (e) {
+            return this.fallback[key] || null;
+        }
+    },
+    setItem(key, value) {
+        try {
+            window.localStorage.setItem(key, value);
+        } catch (e) {
+            this.fallback[key] = String(value);
+        }
+    },
+    removeItem(key) {
+        try {
+            window.localStorage.removeItem(key);
+        } catch (e) {
+            delete this.fallback[key];
+        }
+    }
+};
+const localStorage = safeStorage;
+
 // Sprites defined in pixel grid color codes
 // . = transparent, w = white, b = cyan, r = pink/red, y = yellow, g = green, s = grey
 const SPRITES = {
@@ -368,7 +395,7 @@ const ctx = canvas.getContext('2d');
 
 // Game Parameters and Global Variables
 let score = 0;
-let lives = 3;
+let lives = 5;
 let credit = 0;
 let level = 1;
 let highScores = [];
@@ -1426,7 +1453,9 @@ function gameLoop() {
     // Update & draw player
     if (player) {
         player.update();
-        player.draw(ctx);
+        if (player) {
+            player.draw(ctx);
+        }
     }
 
     // Update & draw enemies
@@ -1659,7 +1688,7 @@ document.getElementById('start-btn').addEventListener('click', () => {
         
         // Start game session
         score = 0;
-        lives = 3;
+        lives = 5;
         level = 1;
         localStorage.setItem('galaga_captured', 'false');
         

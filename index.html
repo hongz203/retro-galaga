@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Galaga (레트로 갤러그)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="space-grid"></div>
+
+    <div class="arcade-cabinet">
+        <!-- Left Panel: Instruction & Controls -->
+        <div class="cabinet-side">
+            <div class="panel-title">Controls</div>
+            <div class="control-guide">
+                <div class="key-row">
+                    <span class="key-cap">←</span>
+                    <span class="key-cap">→</span>
+                    <span class="action-desc">좌우 이동</span>
+                </div>
+                <div class="key-row">
+                    <span class="key-cap">A</span>
+                    <span class="key-cap">D</span>
+                    <span class="action-desc">좌우 이동 (Alt)</span>
+                </div>
+                <div class="key-row">
+                    <span class="key-cap">Space</span>
+                    <span class="action-desc">레이저 발사</span>
+                </div>
+                <div class="key-row">
+                    <span class="key-cap">P</span>
+                    <span class="action-desc">일시 정지</span>
+                </div>
+            </div>
+
+            <div class="panel-title" style="margin-top: 10px;">Game Tips</div>
+            <ul class="info-list">
+                <li class="info-item">
+                    <span class="info-label">적 격추:</span>
+                    <span class="info-value">50 ~ 400 pts</span>
+                </li>
+                <li class="info-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                    <span class="info-label" style="color: var(--neon-pink);">트랙터 빔 & 듀얼쉽:</span>
+                    <span class="info-value" style="color: #fff; font-family: var(--font-ui); font-size: 12px; text-align: left; line-height: 1.4;">
+                        보스 갤러그가 발사하는 하늘색 빔에 잡히면 기체를 빼앗깁니다. 이후 다른 기체로 보스가 하강 공격할 때 처치하여 구출하면 <b style="color:var(--neon-blue);">듀얼쉽(합체)</b> 모드가 되어 화력이 2배가 됩니다!
+                    </span>
+                </li>
+                <li class="info-item">
+                    <span class="info-label">보너스 스테이지:</span>
+                    <span class="info-value" style="color: var(--neon-green);">Level 3, 6, 9...</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Center Panel: The Game Screen Cabinet -->
+        <div class="screen-cabinet">
+            <div class="screen-bezel">
+                <div class="crt-screen">
+                    <div class="crt-curve"></div>
+                    <canvas id="gameCanvas" width="480" height="640"></canvas>
+                </div>
+            </div>
+
+            <!-- Arcade Control Deck -->
+            <div class="control-deck">
+                <button id="coin-btn" class="deck-button">
+                    <span style="color: var(--neon-yellow);">🪙</span> Insert Coin
+                </button>
+                <button id="start-btn" class="deck-button pink" disabled>
+                    🚀 Start Game
+                </button>
+                <button id="sound-btn" class="deck-button">
+                    🔊 Sound: On
+                </button>
+                <button id="reset-btn" class="deck-button" style="padding: 8px 10px; font-size: 10px; opacity: 0.6;">
+                    Reset High
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Panel: High Scores & Stats -->
+        <div class="cabinet-side">
+            <div class="panel-title">Leaderboard</div>
+            <div id="leaderboard" class="leaderboard">
+                <!-- Top Scores will be loaded here dynamically -->
+            </div>
+
+            <div class="panel-title" style="margin-top: 10px;">Status</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">Difficulty:</span>
+                    <span id="diff-display" class="info-value" style="color: var(--neon-green);">NORMAL</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Credit:</span>
+                    <span id="credit-display" class="info-value" style="color: var(--neon-blue);">00</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Dual Ship Mode:</span>
+                    <span id="dual-display" class="info-value" style="color: var(--neon-pink);">READY</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Virtual Controls for Mobile Device touch inputs -->
+    <div class="touch-controls">
+        <div class="touch-dpad">
+            <button id="touch-left" class="touch-btn">◀</button>
+            <button id="touch-right" class="touch-btn">▶</button>
+        </div>
+        <button id="touch-fire" class="touch-btn touch-btn-fire">🔥</button>
+    </div>
+
+    <!-- Overlay Panel for High Score Entry -->
+    <div id="initials-overlay" class="overlay-panel">
+        <h2 class="overlay-title">High Score!</h2>
+        <p class="overlay-text">새로운 명예의 전당 기록입니다!<br>이니셜 3글자를 입력하세요.</p>
+        <input type="text" id="initials-input" class="overlay-input" maxlength="3" value="AAA" autofocus>
+        <br>
+        <button id="submit-score-btn" class="deck-button pink" style="margin: 0 auto; width: 120px;">Submit</button>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
